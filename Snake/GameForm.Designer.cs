@@ -30,7 +30,7 @@
         {
             components = new System.ComponentModel.Container();
             gameTimer = new System.Windows.Forms.Timer(components);
-            gameBoard = new Panel();
+            gameBoard = new DoubleBufferedPanel();
             gameLabel = new Label();
             highscoreLabel = new Label();
             scoreLabel = new Label();
@@ -40,21 +40,24 @@
             speedBar = new TrackBar();
             speedLabel = new Label();
             speedTextBox = new TextBox();
+            BoardSizeLabel = new Label();
+            SmallBoardRadioButton = new RadioButton();
+            MediumBoardRadioButton = new RadioButton();
+            BigBoardRadioButton = new RadioButton();
             ((System.ComponentModel.ISupportInitialize)speedBar).BeginInit();
             SuspendLayout();
             // 
             // gameTimer
             // 
-            gameTimer.Interval = 200;
+            gameTimer.Interval = 300;
             gameTimer.Tick += gameLoop;
             // 
             // gameBoard
             // 
             gameBoard.BackColor = SystemColors.Control;
-            gameBoard.BorderStyle = BorderStyle.FixedSingle;
             gameBoard.Location = new Point(12, 12);
             gameBoard.Name = "gameBoard";
-            gameBoard.Size = new Size(610, 610);
+            gameBoard.Size = new Size(608, 608);
             gameBoard.TabIndex = 0;
             gameBoard.Paint += gameBoard_Paint;
             // 
@@ -94,9 +97,9 @@
             highscore.Font = new Font("Poppins", 10.8F);
             highscore.Location = new Point(764, 88);
             highscore.Name = "highscore";
-            highscore.Size = new Size(47, 31);
+            highscore.Size = new Size(25, 31);
             highscore.TabIndex = 2;
-            highscore.Text = "999";
+            highscore.Text = "0";
             // 
             // score
             // 
@@ -111,11 +114,10 @@
             // playButton
             // 
             playButton.Font = new Font("Poppins", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            playButton.Location = new Point(679, 263);
+            playButton.Location = new Point(679, 408);
             playButton.Name = "playButton";
             playButton.Size = new Size(110, 40);
-            playButton.TabIndex = 3;
-            playButton.TabStop = false;
+            playButton.TabIndex = 1;
             playButton.Text = "Play";
             playButton.UseVisualStyleBackColor = true;
             playButton.Click += playButton_Click;
@@ -125,13 +127,14 @@
             speedBar.AutoSize = false;
             speedBar.LargeChange = 1;
             speedBar.Location = new Point(648, 217);
+            speedBar.Maximum = 9;
             speedBar.Minimum = 1;
             speedBar.Name = "speedBar";
             speedBar.Size = new Size(163, 28);
-            speedBar.TabIndex = 6;
+            speedBar.TabIndex = 2;
             speedBar.TabStop = false;
             speedBar.TickStyle = TickStyle.None;
-            speedBar.Value = 1;
+            speedBar.Value = 2;
             speedBar.ValueChanged += speedBar_ValueChanged;
             // 
             // speedLabel
@@ -146,20 +149,77 @@
             // 
             // speedTextBox
             // 
-            speedTextBox.Location = new Point(764, 183);
+            speedTextBox.DataBindings.Add(new Binding("Text", speedBar, "Value", true));
+            speedTextBox.Font = new Font("Poppins", 10.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            speedTextBox.Location = new Point(764, 177);
+            speedTextBox.MaxLength = 1;
             speedTextBox.Name = "speedTextBox";
-            speedTextBox.Size = new Size(35, 27);
+            speedTextBox.Size = new Size(22, 34);
             speedTextBox.TabIndex = 5;
             speedTextBox.TabStop = false;
+            speedTextBox.TextAlign = HorizontalAlignment.Center;
+            speedTextBox.Validating += speedTextBox_Validating;
+            // 
+            // BoardSizeLabel
+            // 
+            BoardSizeLabel.AutoSize = true;
+            BoardSizeLabel.Font = new Font("Poppins", 10.8F);
+            BoardSizeLabel.Location = new Point(648, 251);
+            BoardSizeLabel.Name = "BoardSizeLabel";
+            BoardSizeLabel.Size = new Size(109, 31);
+            BoardSizeLabel.TabIndex = 2;
+            BoardSizeLabel.Text = "Board size:";
+            // 
+            // SmallBoardRadioButton
+            // 
+            SmallBoardRadioButton.AutoSize = true;
+            SmallBoardRadioButton.Font = new Font("Poppins", 10.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            SmallBoardRadioButton.Location = new Point(658, 285);
+            SmallBoardRadioButton.Name = "SmallBoardRadioButton";
+            SmallBoardRadioButton.Size = new Size(85, 35);
+            SmallBoardRadioButton.TabIndex = 6;
+            SmallBoardRadioButton.Text = "Small";
+            SmallBoardRadioButton.UseVisualStyleBackColor = true;
+            SmallBoardRadioButton.CheckedChanged += SmallBoardRadioButton_CheckedChanged;
+            // 
+            // MediumBoardRadioButton
+            // 
+            MediumBoardRadioButton.AutoSize = true;
+            MediumBoardRadioButton.Checked = true;
+            MediumBoardRadioButton.Font = new Font("Poppins", 10.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            MediumBoardRadioButton.Location = new Point(658, 326);
+            MediumBoardRadioButton.Name = "MediumBoardRadioButton";
+            MediumBoardRadioButton.Size = new Size(109, 35);
+            MediumBoardRadioButton.TabIndex = 6;
+            MediumBoardRadioButton.TabStop = true;
+            MediumBoardRadioButton.Text = "Medium";
+            MediumBoardRadioButton.UseVisualStyleBackColor = true;
+            MediumBoardRadioButton.CheckedChanged += MediumBoardRadioButton_CheckedChanged;
+            // 
+            // BigBoardRadioButton
+            // 
+            BigBoardRadioButton.AutoSize = true;
+            BigBoardRadioButton.Font = new Font("Poppins", 10.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            BigBoardRadioButton.Location = new Point(658, 367);
+            BigBoardRadioButton.Name = "BigBoardRadioButton";
+            BigBoardRadioButton.Size = new Size(62, 35);
+            BigBoardRadioButton.TabIndex = 6;
+            BigBoardRadioButton.Text = "Big";
+            BigBoardRadioButton.UseVisualStyleBackColor = true;
+            BigBoardRadioButton.CheckedChanged += BigBoardRadioButton_CheckedChanged;
             // 
             // GameForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(845, 634);
+            Controls.Add(BigBoardRadioButton);
+            Controls.Add(MediumBoardRadioButton);
+            Controls.Add(SmallBoardRadioButton);
             Controls.Add(playButton);
             Controls.Add(speedTextBox);
             Controls.Add(speedBar);
+            Controls.Add(BoardSizeLabel);
             Controls.Add(speedLabel);
             Controls.Add(scoreLabel);
             Controls.Add(score);
@@ -180,7 +240,7 @@
         #endregion
 
         private System.Windows.Forms.Timer gameTimer;
-        private Panel gameBoard;
+        private DoubleBufferedPanel gameBoard;
         private Label gameLabel;
         private Label highscoreLabel;
         private Label scoreLabel;
@@ -190,5 +250,9 @@
         private TrackBar speedBar;
         private Label speedLabel;
         private TextBox speedTextBox;
+        private Label BoardSizeLabel;
+        private RadioButton SmallBoardRadioButton;
+        private RadioButton MediumBoardRadioButton;
+        private RadioButton BigBoardRadioButton;
     }
 }
